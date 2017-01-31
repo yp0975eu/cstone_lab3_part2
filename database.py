@@ -33,7 +33,7 @@ class DB:
 
         except sqlite3.Error as er:
             print('Select Error', er)
-g
+
     def find_by_name(self, search):
         query = '''SELECT * FROM chainsaw_records WHERE name LIKE ? '''
         return self.select(query, search)
