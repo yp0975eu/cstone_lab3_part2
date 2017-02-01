@@ -1,6 +1,6 @@
 class Menu:
-
-    menu_options = ['create', 'find', 'update', 'delete', 'quit']
+    '''for displaying main menu'''
+    menu_options = ['create', 'find', 'update', 'delete', 'view all', 'quit']
     find_options = ['find by name', 'find by country', 'find by catches']
 
     def __init__(self):
@@ -15,6 +15,7 @@ class Menu:
             print(menu_num, value)
             menu_num += 1
 
+    # for getting main menu selections
     @staticmethod
     def get_user_input(options):
         while True:
@@ -33,27 +34,19 @@ class Menu:
 
                 exit('Goodbye')
 
-
+    # takes a list of juggler objects
     @staticmethod
-    def print_results(data):
-        if len(data) == 0:
+    def print_results(results):
+        if len(results) == 0:
             print('We got nothing. Sorry.')
         else:
-            print(data)
-
-    @staticmethod
-    def print_results_with_id(data):
-        if len(data) == 0:
-            print('We got nothing. Sorry.')
-        else:
-            print('ID | Name | Country | Catches')
-            for d in data:
-                print('{0}{1}{2}{3}'
-                      .format(str(d[0]).ljust(5),str(d[1]).ljust(7),str(d[2]).ljust(10),str(d[3]).ljust(10)))
+            for juggler in results:
+                print("ID: {0}\t name: {1}\t country: {2}\t catches: {3}"
+                      .format(juggler.id, juggler.name, juggler.country, juggler.catches))
 
 
 class Dialogs:
-
+    '''for handling cases when we need to interact with user and get input'''
     @staticmethod
     def show_create():
 
@@ -63,7 +56,7 @@ class Dialogs:
 
         catches = Dialogs.get_int_input('Enter number of catches\n')
 
-        return name, country, catches
+        return {'name':name, 'country':country, 'catches':catches}
 
     @staticmethod
     def show_update():
@@ -72,12 +65,12 @@ class Dialogs:
         name = Dialogs.get_string_input("Enter name\n")
         country = Dialogs.get_string_input("Enter country\n")
         catches = Dialogs.get_int_input("Enter number of catches\n")
-        return id, name, country, catches
+        return {'id':id, 'name':name, 'country':country, 'catches': catches}
 
     @staticmethod
     def show_delete():
-        id = Dialogs.get_int_input('Enter record ID to delete\n')
-        return id
+        record_id = Dialogs.get_int_input('Enter record ID to delete\n')
+        return {'id': record_id}
 
     @staticmethod
     def get_string_input(message):

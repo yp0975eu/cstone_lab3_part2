@@ -7,7 +7,8 @@ from menu import Menu, Dialogs
 def run():
     # create tables
     db = DB()
-    db.create_tables()
+
+    # db.create_tables()
     data = None
 
     # loop
@@ -18,71 +19,85 @@ def run():
 
         # get user input
         selection = Menu.get_user_input(Menu.menu_options)
-
+        # select
         if selection == 1:
             # returns a tuple with  ( name, country, number of catches )
             data = Dialogs.show_create()
 
             db.insert(data)
 
+        # find
         if selection == 2:
+
             Menu.display(Menu.find_options)
 
             # get user input
             selection = Menu.get_user_input(Menu.find_options)
+
             if selection == 1:
 
                 name = Dialogs.get_string_input('Enter name\n')
 
-                data = db.find_by_name(name)
+                results = db.find_by_name(name)
+
+                # results obj
+                Menu.print_results(results)
 
             elif selection == 2:
 
                 country = Dialogs.get_string_input('Enter country\n')
 
-                data = db.find_by_country(country)
+                results = db.find_by_country(country)
+
+                Menu.print_results(results)
 
             elif selection == 3:
 
                 catches = Dialogs.get_int_input('Enter number of catches\n')
 
-                data = db.find_by_catches(str(catches))
+                results = db.find_by_catches(str(catches))
 
-            else:
+                Menu.print_results(results)
 
-                data = db.get_all()
+        # update a record
+        elif selection == 3:
+
+            data = db.get_all()
 
             Menu.print_results(data)
 
-        # update a record
-        if selection == 3:
+            new_data = Dialogs.show_update() #returns dictionary
 
-            data = db.get_all()
-
-            Menu.print_results_with_id(data)
-
-            new_data = Dialogs.show_update()
-
-            db.update_prepare(new_data)
+            db.update(new_data)
 
         # delete a record
-        if selection == 4:
+        elif selection == 4:
 
             data = db.get_all()
 
-            Menu.print_results_with_id(data)
+            Menu.print_results(data)
 
             id_to_delete = Dialogs.show_delete()
 
-            db.delete_prepare(id_to_delete)
+            db.delete(id_to_delete)
 
             data = db.get_all()
 
-            Menu.print_results_with_id(data)
+            Menu.print_results(data)
+
+        # see all records
+        elif selection == 5:
+            results = db.get_all()
+            Menu.print_results(results)
+
         # exit program
-        if selection == 5:
+        elif selection == 6:
             db.close_connection()
             exit()
 
 if __name__ == "__main__":
-    run()
+
+    try:
+        run()
+    except Exception as exc:
+        print('something went wrong', exc)
